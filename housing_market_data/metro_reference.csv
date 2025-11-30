@@ -1,0 +1,18 @@
+name,cbsa_code,category
+"Los Angeles-Long Beach-Anaheim, CA",31080,California Metros
+"San Francisco-Oakland-Berkeley, CA",41860,California Metros
+"San Diego-Chula Vista-Carlsbad, CA",41740,California Metros
+"San Jose-Sunnyvale-Santa Clara, CA",41940,California Metros
+"Sacramento-Roseville-Folsom, CA",40900,California Metros
+"Dallas-Fort Worth-Arlington, TX",19100,Texas Metros
+"Houston-The Woodlands-Sugar Land, TX",26420,Texas Metros
+"Austin-Round Rock-Georgetown, TX",12420,Texas Metros
+"San Antonio-New Braunfels, TX",41700,Texas Metros
+"Phoenix-Mesa-Chandler, AZ",38060,Emerging Markets
+"Charlotte-Concord-Gastonia, NC-SC",16740,Emerging Markets
+"Raleigh-Cary, NC",39580,Emerging Markets
+"Nashville-Davidson--Murfreesboro--Franklin, TN",34980,Emerging Markets
+"Greenville-Anderson, SC",24860,Emerging Markets
+"Charleston-North Charleston, SC",16700,Emerging Markets
+"Buffalo-Cheektowaga, NY",15380,Emerging Markets
+"Virginia Beach-Norfolk-Newport News, VA-NC",47260,Emerging Markets

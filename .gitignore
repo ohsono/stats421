@@ -1,0 +1,10 @@
+# Instruction file
+AGENTS.md
+CLAUDE.md
+
+# compression files
+*.tar.gz
+*.zip
+
+# pyenv file
+venv/

@@ -1,0 +1,132 @@
+Housing Market Analysis - Complete Directory Structure
+═══════════════════════════════════════════════════════════
+
+PROJECT ROOT
+│
+├── 📜 Core Scripts
+│   ├── housing_data_downloader.py    (17KB) - Main data downloader
+│   ├── bls_api_downloader.py         (13KB) - BLS API downloader
+│   ├── verify_data.py                (15KB) - Data quality checker
+│   ├── data_cleaner.py               (9KB)  - Data cleaning & merging
+│   └── setup.py                      (10KB) - Setup wizard
+│
+├── 🛠️  Utilities
+│   └── run.sh                        (executable) - Bash wrapper
+│
+├── 📚 Documentation
+│   ├── README.md                     (9.4KB) - Complete guide
+│   ├── QUICK_REFERENCE.md            - Command reference
+│   └── PACKAGE_SUMMARY.md            - This package overview
+│
+├── ⚙️  Configuration
+│   └── requirements.txt              - Python dependencies
+│
+└── 📊 Data Directory (created after first download)
+    └── housing_market_data/
+        │
+        ├── 📁 zillow/                (Zillow Research Data)
+        │   ├── zhvi_metro.csv        - Home values (metro level)
+        │   ├── zhvi_county.csv       - Home values (county level)
+        │   ├── zhvi_zip.csv          - Home values (ZIP level)
+        │   ├── zori_metro.csv        - Rental index
+        │   ├── inventory_metro.csv   - For-sale inventory
+        │   ├── days_on_market_metro.csv
+        │   ├── sales_count_metro.csv
+        │   ├── median_list_price_metro.csv
+        │   └── price_cuts_metro.csv
+        │
+        ├── 📁 census/                (U.S. Census Bureau)
+        │   ├── population_estimates.csv
+        │   ├── building_permits.csv
+        │   └── migration_flows.csv   ⚠️ (manual download required)
+        │
+        ├── 📁 bls/                   (Bureau of Labor Statistics)
+        │   ├── metro_employment.csv  (if using API)
+        │   ├── metro_wages.csv       (if using API)
+        │   ├── state_employment.csv  (if using API)
+        │   ├── api_key.txt          (optional - your API key)
+        │   ├── qcew/                ⚠️ (or manual downloads here)
+        │   └── oes/                 ⚠️ (or manual downloads here)
+        │
+        ├── 📁 other/                 (Additional Sources)
+        │   ├── fhfa_hpi_metro.csv    - FHFA House Price Index
+        │   └── freddie_mac_rates.csv - Mortgage rates
+        │
+        ├── 📄 metro_reference.csv    - Metro area codes & names
+        ├── 📄 download_metadata.json - Download log
+        └── 📄 verification_report.json - Quality report
+
+═══════════════════════════════════════════════════════════
+
+KEY METRICS AFTER DOWNLOAD:
+───────────────────────────
+Total Files:     ~20-30 CSV files
+Total Size:      500MB - 1GB
+Metro Coverage:  17 key markets
+Date Range:      2020-2025
+Update Freq:     Monthly (Zillow), Quarterly (BLS), Annual (Census)
+
+KEY METROS COVERED:
+───────────────────────────
+California (Outbound)
+  • Los Angeles-Long Beach-Anaheim (31080)
+  • San Francisco-Oakland-Berkeley (41860)
+  • San Diego-Chula Vista-Carlsbad (41740)
+  • San Jose-Sunnyvale-Santa Clara (41940)
+  • Sacramento-Roseville-Folsom (40900)
+
+Texas (Primary Inbound)
+  • Dallas-Fort Worth-Arlington (19100)
+  • Houston-The Woodlands-Sugar Land (26420)
+  • Austin-Round Rock-Georgetown (12420)
+  • San Antonio-New Braunfels (41700)
+
+Emerging Hot Markets (2024-2025 Data)
+  • Phoenix-Mesa-Chandler, AZ (38060) ⭐ Only major metro +migration
+  • Charlotte-Concord-Gastonia, NC-SC (16740)
+  • Raleigh-Cary, NC (39580)
+  • Nashville-Davidson-Murfreesboro, TN (34980)
+  • Greenville-Anderson, SC (24860) ⭐ Highest migration rate
+  • Charleston-North Charleston, SC (16700)
+  • Buffalo-Cheektowaga, NY (15380) ⭐ #1 Zillow hot market
+  • Virginia Beach-Norfolk-Newport News, VA-NC (47260)
+
+QUICK START COMMANDS:
+─────────────────────────────
+# Complete setup (recommended first time)
+python setup.py
+
+# Download data only
+python housing_data_downloader.py
+
+# Verify data quality
+python verify_data.py
+
+# Download BLS data (with API key)
+export BLS_API_KEY='your-key-here'
+python bls_api_downloader.py
+
+# Using bash wrapper (Unix/Mac)
+./run.sh all        # Download + verify
+./run.sh status     # Check what you have
+./run.sh help       # See all commands
+
+DATA SOURCES:
+─────────────────────────────
+✓ Zillow Research        https://www.zillow.com/research/data/
+✓ U.S. Census Bureau     https://www.census.gov/data.html
+✓ Bureau of Labor Stats  https://www.bls.gov/data/
+✓ FHFA                   https://www.fhfa.gov/data
+✓ Freddie Mac            https://www.freddiemac.com/pmms
+
+NEXT STEPS:
+─────────────────────────────
+1. Download data         → python housing_data_downloader.py
+2. Verify quality        → python verify_data.py
+3. Clean & merge         → python data_cleaner.py
+4. Feature engineering   → Calculate metrics
+5. Analysis              → Market scoring, ROI models
+6. Visualization         → Charts, reports
+7. Investment decisions  → 2026 opportunities!
+
+═══════════════════════════════════════════════════════════
