@@ -375,12 +375,12 @@ class DataCleaner:
         # Based on typical NBER file: 'cbsa', 'fipsstatecode', 'fipscountycode'
         
         # Check columns
-        if 'cbsa' not in crosswalk.columns:
+        if 'cbsacode' not in crosswalk.columns:
             # Fallback or error
             print(f"  ⚠ Unexpected crosswalk columns: {crosswalk.columns}")
             return pd.DataFrame()
             
-        crosswalk['cbsa_code'] = crosswalk['cbsa'].astype(str)
+        crosswalk['cbsa_code'] = crosswalk['cbsacode'].astype(str)
         # Create 5-digit FIPS: State (2) + County (3)
         crosswalk['fips_state'] = crosswalk['fipsstatecode'].astype(str).str.zfill(2)
         crosswalk['fips_county'] = crosswalk['fipscountycode'].astype(str).str.zfill(3)
@@ -522,30 +522,49 @@ class DataCleaner:
             df = pd.read_csv(fhfa_file)
             
             # Filter for Metros
-            # Check 'level' column
-            if 'level' in df.columns:
-                # Some files use 'MSA' or 'Metropolitan Statistical Area'
-                # Let's inspect unique levels if needed, but usually 'MSA'
-                pass
-            
-            # Actually, the file we saw earlier was 'USA or Census Division'. 
-            # We need to check if it contains Metros. 
-            # If the downloaded file is the master file, it might have everything.
-            # Let's assume it has 'MSA' in 'level' or similar.
-            
-            # Filter for our target metros in 'place_id' (assuming it holds CBSA code)
             # Ensure place_id is string
             df['place_id'] = df['place_id'].astype(str)
-            df_metro = df[df['place_id'].isin(self.target_metros)].copy()
+            
+            # Filter for specific HPI types to avoid duplicates
+            if 'hpi_type' in df.columns:
+                df = df[df['hpi_type'] == 'traditional']
+            if 'hpi_flavor' in df.columns:
+                df = df[df['hpi_flavor'] == 'purchase-only']
+            if 'frequency' in df.columns:
+                df = df[df['frequency'].isin(['monthly', 'quarterly'])]
+                
+            # Map CBSA codes to FHFA IDs (MSADs for large metros)
+            fhfa_map = {
+                '31080': '31084', # Los Angeles
+                '41860': '41884', # San Francisco
+                '19100': '19124'  # Dallas
+            }
+            
+            # Create reverse map for restoring CBSA codes
+            reverse_map = {v: k for k, v in fhfa_map.items()}
+            
+            # Prepare target IDs
+            target_ids = []
+            for cbsa in self.target_metros:
+                target_ids.append(fhfa_map.get(cbsa, cbsa))
+                
+            df_metro = df[df['place_id'].isin(target_ids)].copy()
             
             if df_metro.empty:
                 print("  ⚠ No matching metros found in FHFA file (check place_id format)")
                 return pd.DataFrame()
+            
+            # Map back to standard CBSA codes
+            df_metro['cbsa_code'] = df_metro['place_id'].map(lambda x: reverse_map.get(x, x))
                 
-            # Create Date (Quarterly)
-            # period 1, 2, 3, 4
-            df_metro['month'] = (df_metro['period'] * 3) - 2 # 1->1, 2->4, 3->7, 4->10
-            df_metro['date'] = pd.to_datetime(df_metro['yr'].astype(str) + '-' + df_metro['month'].astype(str) + '-01')
+            # Create Date
+            # Handle quarterly vs monthly
+            if 'frequency' in df_metro.columns:
+                # If quarterly, convert to month (1->1, 2->4, 3->7, 4->10)
+                mask_q = df_metro['frequency'] == 'quarterly'
+                df_metro.loc[mask_q, 'period'] = (df_metro.loc[mask_q, 'period'] * 3) - 2
+            
+            df_metro['date'] = pd.to_datetime(df_metro['yr'].astype(str) + '-' + df_metro['period'].astype(str) + '-01')
             
             # Select relevant columns
             # We prefer 'index_sa' (Seasonally Adjusted) if available, else 'index_nsa'
@@ -553,13 +572,16 @@ class DataCleaner:
             
             df_clean = df_metro[['place_id', 'date', metric]].rename(columns={'place_id': 'cbsa_code', metric: 'hpi'})
             
-            # Upsample to Monthly
-            # We need to group by cbsa_code and resample
+            # Handle potential duplicates
+            df_clean = df_clean.drop_duplicates(subset=['cbsa_code', 'date'])
+            
+            # Upsample to Monthly (if needed, though we filtered for monthly)
+            # But just in case we have gaps or it was actually quarterly
             final_hpi = pd.DataFrame()
             
             for cbsa in df_clean['cbsa_code'].unique():
                 subset = df_clean[df_clean['cbsa_code'] == cbsa].set_index('date').sort_index()
-                # Resample to MS (Month Start) and interpolate
+                # Resample to MS (Month Start) and interpolate to fill gaps
                 subset_monthly = subset.resample('MS').interpolate(method='linear')
                 subset_monthly['cbsa_code'] = cbsa
                 
@@ -572,7 +594,46 @@ class DataCleaner:
             print(f"  ✗ Error processing FHFA data: {e}")
             return pd.DataFrame()
 
-    def merge_data(self, zillow, census, bls, fhfa):
+    def load_and_standardize_freddie_mac(self):
+        """
+        Standardize Freddie Mac Mortgage Rates:
+        - Weekly to Monthly (Average)
+        """
+        print("\nProcessing Freddie Mac Data...")
+        freddie_file = self.data_dir / 'other' / 'freddie_mac_rates.csv'
+        
+        if not freddie_file.exists():
+            print("  ⚠ Freddie Mac file not found")
+            return pd.DataFrame()
+            
+        try:
+            df = pd.read_csv(freddie_file)
+            
+            # Expected cols: date, pmms30, etc.
+            # Check column names. Usually 'date' or 'Week'
+            date_col = next((c for c in df.columns if 'date' in c.lower() or 'week' in c.lower()), None)
+            rate_col = next((c for c in df.columns if '30' in c and 'us' in c.lower() or 'pmms30' in c.lower()), None)
+            
+            if not date_col or not rate_col:
+                print(f"  ⚠ Could not identify date/rate columns in {df.columns}")
+                return pd.DataFrame()
+                
+            df['date'] = pd.to_datetime(df[date_col])
+            df['mortgage_rate'] = pd.to_numeric(df[rate_col], errors='coerce')
+            
+            # Resample to Monthly Average
+            df_monthly = df.set_index('date').resample('MS')['mortgage_rate'].mean().reset_index()
+            
+            # This is national data, so we need to broadcast it to all metros
+            # We'll return it as is, and merge_data will handle the broadcast
+            print(f"  ✓ Processed Freddie Mac Rates: {df_monthly.shape}")
+            return df_monthly
+            
+        except Exception as e:
+            print(f"  ✗ Error processing Freddie Mac data: {e}")
+            return pd.DataFrame()
+
+    def merge_data(self, zillow, census, bls, fhfa, freddie):
         """
         Merge all datasets on cbsa_code and date
         """
@@ -596,6 +657,10 @@ class DataCleaner:
         # Merge FHFA
         if not fhfa.empty:
             master = pd.merge(master, fhfa, on=['cbsa_code', 'date'], how='left')
+            
+        # Merge Freddie Mac (National Level - Broadcast)
+        if not freddie.empty:
+            master = pd.merge(master, freddie, on='date', how='left')
             
         # Add Metro Name from reference
         master = pd.merge(master, self.metro_ref[['cbsa_code', 'name', 'category']], on='cbsa_code', how='left')
@@ -646,11 +711,13 @@ class DataCleaner:
         print(f"\n✓ Saved Master Dataset to: {output_path}")
         
         # Save a summary
-        summary = df.groupby('name').agg({
-            'date': ['min', 'max'],
-            'zhvi': 'count',
-            'population': 'count'
-        })
+        agg_dict = {'date': ['min', 'max']}
+        if 'zhvi' in df.columns:
+            agg_dict['zhvi'] = 'count'
+        if 'population' in df.columns:
+            agg_dict['population'] = 'count'
+            
+        summary = df.groupby('name').agg(agg_dict)
         print("\nData Summary per Metro:")
         print(summary)
 
@@ -659,8 +726,9 @@ class DataCleaner:
         census_df = self.load_and_standardize_census()
         bls_df = self.load_and_standardize_bls()
         fhfa_df = self.load_and_standardize_fhfa()
+        freddie_df = self.load_and_standardize_freddie_mac()
         
-        master_df = self.merge_data(zillow_df, census_df, bls_df, fhfa_df)
+        master_df = self.merge_data(zillow_df, census_df, bls_df, fhfa_df, freddie_df)
         clean_df = self.clean_data(master_df)
         self.save_data(clean_df)
 

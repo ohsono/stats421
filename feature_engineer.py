@@ -12,7 +12,7 @@ class FeatureEngineer:
     def __init__(self, data_dir='housing_market_data'):
         self.data_dir = Path(data_dir)
         self.processed_dir = self.data_dir / 'processed'
-        self.input_file = self.processed_dir / 'master_dataset.csv'
+        self.input_file = self.processed_dir / 'master_housing_data.csv'
         self.output_file = self.processed_dir / 'features_master.csv'
         
     def load_data(self):

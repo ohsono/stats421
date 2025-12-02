@@ -166,6 +166,7 @@ COMMANDS:
     download    Download housing market data (Zillow, Census, FHFA, etc.)
     bls         Download BLS employment/wage data (requires API key)
     verify      Verify downloaded data quality
+    process     Run data cleaning and feature engineering
     status      Show current data status
     all         Run download + verify
     clean       Remove downloaded data (for fresh start)
@@ -258,6 +259,14 @@ main() {
             check_dependencies
             run_download
             run_verify
+            ;;
+        process)
+            check_dependencies
+            print_header "Running Data Processing Pipeline"
+            $PYTHON_CMD data_cleaner.py
+            $PYTHON_CMD ca_county_cleaner.py
+            $PYTHON_CMD tx_county_cleaner.py
+            $PYTHON_CMD feature_engineer.py
             ;;
         status)
             show_status

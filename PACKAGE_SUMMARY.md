@@ -4,11 +4,12 @@
 
 A complete, production-ready data pipeline for downloading and verifying housing market datasets to support your 2026 investment analysis, with specific focus on CA→TX migration and emerging hot markets.
 
-## 📁 Files Created (8 total)
+## 📁 Files Created (12 total)
 
-### 1. Core Scripts (4 files)
+### 1. Core Scripts (8 files)
 
 #### `housing_data_downloader.py` (17KB)
+
 - **Purpose:** Main workhorse - downloads data from multiple sources
 - **Downloads:** Zillow, Census, FHFA, Freddie Mac (9 datasets)
 - **Features:**
@@ -19,6 +20,7 @@ A complete, production-ready data pipeline for downloading and verifying housing
 - **Run:** `python housing_data_downloader.py`
 
 #### `bls_api_downloader.py` (13KB)
+
 - **Purpose:** Bureau of Labor Statistics data via API
 - **Downloads:** Employment, wages, unemployment by metro
 - **Features:**
@@ -27,9 +29,10 @@ A complete, production-ready data pipeline for downloading and verifying housing
   - Batch processing
   - Metro and state level data
 - **Run:** `python bls_api_downloader.py`
-- **Requires:** BLS API key (free at https://www.bls.gov/developers/)
+- **Requires:** BLS API key (free at <https://www.bls.gov/developers/>)
 
 #### `verify_data.py` (15KB)
+
 - **Purpose:** Quality assurance - checks all downloaded data
 - **Checks:**
   - File existence and completeness
@@ -37,9 +40,35 @@ A complete, production-ready data pipeline for downloading and verifying housing
   - Directory structure
   - File sizes and row counts
 - **Output:** Console report + JSON file
+- **Output:** Console report + JSON file
 - **Run:** `python verify_data.py`
 
+#### `data_cleaner.py` (28KB)
+
+- **Purpose:** Standardizes and merges raw data
+- **Features:**
+  - Zillow, Census, BLS standardization
+  - Merges into master dataset
+  - Handles missing values
+- **Run:** `python data_cleaner.py`
+
+#### `feature_engineer.py` (3.5KB)
+
+- **Purpose:** Calculates investment metrics
+- **Metrics:**
+  - Rental Yield
+  - Price Momentum (YoY, MoM)
+  - Rent Growth
+  - Inventory Dynamics
+- **Run:** `python feature_engineer.py`
+
+#### `ca_county_cleaner.py` & `tx_county_cleaner.py`
+
+- **Purpose:** State-specific county level analysis
+- **Run:** `python ca_county_cleaner.py`, `python tx_county_cleaner.py`
+
 #### `setup.py` (10KB)
+
 - **Purpose:** Interactive setup wizard
 - **Features:**
   - Python version check
@@ -53,8 +82,10 @@ A complete, production-ready data pipeline for downloading and verifying housing
 ### 2. Automation & Convenience
 
 #### `run.sh` (Bash Script)
+
 - **Purpose:** Unix/Mac command-line wrapper
 - **Commands:**
+
   ```bash
   ./run.sh setup      # Complete setup
   ./run.sh download   # Download data
@@ -63,11 +94,13 @@ A complete, production-ready data pipeline for downloading and verifying housing
   ./run.sh status     # Check what you have
   ./run.sh clean      # Fresh start
   ```
+
 - **Features:** Color output, error handling, help system
 
 ### 3. Documentation (3 files)
 
 #### `README.md` (9.4KB)
+
 - **Purpose:** Complete documentation
 - **Contains:**
   - Project overview
@@ -78,6 +111,7 @@ A complete, production-ready data pipeline for downloading and verifying housing
   - Troubleshooting guide
 
 #### `QUICK_REFERENCE.md`
+
 - **Purpose:** Cheat sheet for daily use
 - **Contains:**
   - Command quick reference
@@ -86,6 +120,7 @@ A complete, production-ready data pipeline for downloading and verifying housing
   - Troubleshooting quick fixes
 
 #### `requirements.txt`
+
 - **Purpose:** Python dependencies
 - **Packages:** pandas, numpy, requests, matplotlib, scikit-learn, etc.
 - **Install:** `pip install -r requirements.txt`
@@ -93,12 +128,14 @@ A complete, production-ready data pipeline for downloading and verifying housing
 ## 🚀 Getting Started (Choose Your Path)
 
 ### Path 1: Complete Beginner (Recommended)
+
 ```bash
 # One command does everything
 python setup.py
 ```
 
 ### Path 2: Quick Start (Command Line)
+
 ```bash
 # Install dependencies
 pip install -r requirements.txt
@@ -111,6 +148,7 @@ python verify_data.py
 ```
 
 ### Path 3: Unix/Mac Users (Easiest)
+
 ```bash
 # Make executable (one time)
 chmod +x run.sh
@@ -123,7 +161,8 @@ chmod +x run.sh
 
 ### Automatically Downloaded (No Manual Steps)
 
-**Zillow Research (9 datasets)**
+#### Zillow Research (9 datasets)
+
 - Home values (ZHVI) - Metro, County, ZIP levels
 - Rental index (ZORI)
 - Inventory metrics
@@ -132,39 +171,47 @@ chmod +x run.sh
 - List prices
 - Price cuts
 
-**Federal Housing Finance Agency**
+#### Federal Housing Finance Agency
+
 - House Price Index (HPI) by metro
 
-**Freddie Mac**
+#### Freddie Mac
+
 - Historical mortgage rates (weekly)
 
-**Census Bureau (Partial)**
+#### Census Bureau (Partial)
+
 - Population estimates (2020-2023)
 - Building permits by metro
 
 ### Requires Manual Download
 
-**Census Migration Flows**
+#### Census Migration Flows
+
 - County-to-County migration data
-- Download from: https://www.census.gov/data/tables/time-series/demo/geographic-mobility/county-to-county-migration.html
+- Download from: <https://www.census.gov/data/tables/time-series/demo/geographic-mobility/county-to-county-migration.html>
 - Save as: `housing_market_data/census/migration_flows.csv`
 
-**BLS Data (Optional - Can Use API Instead)**
+#### BLS Data (Optional - Can Use API Instead)
+
 - QCEW (employment/wages)
-- Download from: https://www.bls.gov/cew/downloadable-data-files.htm
+- Download from: <https://www.bls.gov/cew/downloadable-data-files.htm>
 - Alternative: Use `bls_api_downloader.py` with free API key
 
 ## 📈 What You Can Analyze
 
 ### Included Metros (17 tracked)
 
-**California (Outbound)**
+#### California (Outbound)
+
 - Los Angeles, San Francisco, San Diego, San Jose, Sacramento
 
-**Texas (Inbound)** 
+#### Texas (Inbound)
+
 - Dallas-Fort Worth, Houston, Austin, San Antonio
 
-**Emerging Hot Markets (Based on 2024-2025 Data)**
+#### Emerging Hot Markets (Based on 2024-2025 Data)
+
 - Phoenix, AZ (only major metro with positive migration)
 - Charlotte & Raleigh, NC
 - Nashville, TN
@@ -196,12 +243,14 @@ From our web research during script development:
 ## 🔄 After Download - Next Steps
 
 ### 1. Data Cleaning (Next Script to Create)
+
 - Merge datasets on metro codes
 - Handle missing values
 - Standardize date formats
 - Create master dataset
 
 ### 2. Feature Engineering
+
 - Migration rates
 - Affordability indices
 - Price momentum
@@ -209,12 +258,14 @@ From our web research during script development:
 - Job growth rates
 
 ### 3. Analysis
+
 - Correlation analysis
 - Market scoring system
 - ROI projections
 - Risk assessment
 
 ### 4. Visualization
+
 - Interactive dashboards
 - Metro comparison charts
 - Migration flow maps
@@ -229,7 +280,8 @@ From our web research during script development:
 
 ## 🎓 Learning the System
 
-### Run in This Order (First Time):
+### Run in This Order (First Time)
+
 ```bash
 # 1. Setup environment
 python setup.py
@@ -245,7 +297,8 @@ python bls_api_downloader.py
 python verify_data.py
 ```
 
-### Check Your Progress:
+### Check Your Progress
+
 ```bash
 # Quick status
 ./run.sh status
@@ -260,21 +313,25 @@ ls -lh housing_market_data/*/
 ## 🔧 Common Issues & Solutions
 
 ### "Module not found"
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### "Permission denied" (run.sh)
+
 ```bash
 chmod +x run.sh
 ```
 
 ### Download failed for specific file
+
 - Check internet connection
 - Verify URL is still valid (data sources occasionally change URLs)
 - Try manual download from source website
 
 ### "No such file or directory: housing_market_data"
+
 ```bash
 # This is normal on first run
 # The directory is created automatically
@@ -293,7 +350,7 @@ python housing_data_downloader.py
 
 ## 🎯 Your Analysis Workflow
 
-```
+```text
 1. Download Data
    ├─→ python housing_data_downloader.py (automatic)
    └─→ Manual: Census migration, BLS data (if no API)
@@ -301,10 +358,10 @@ python housing_data_downloader.py
 2. Verify Quality
    └─→ python verify_data.py
 
-3. Clean & Merge (next script)
+3. Clean & Merge (Run `data_cleaner.py`)
    └─→ Standardize, combine datasets
 
-4. Feature Engineering
+4. Feature Engineering (Run `feature_engineer.py`)
    └─→ Calculate metrics, indices
 
 5. Analysis
@@ -351,16 +408,18 @@ python housing_data_downloader.py
 - **Status Check:** `./run.sh status`
 - **Data Issues:** Check verification_report.json
 
-## 🎉 You're Ready!
+## 🎉 You're Ready
 
 You now have a complete, professional-grade housing market data collection system.
 
 **Start with:**
+
 ```bash
 python setup.py
 ```
 
 **Then move on to:**
+
 - Data cleaning
 - Analysis
 - Visualization

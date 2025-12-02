@@ -369,6 +369,7 @@ class DataVerifier:
         if all(required_datasets):
             print("✓ READY FOR BASIC ANALYSIS")
             print("\nYou have the minimum required datasets to begin analysis.")
+            print("Next step: Run 'python data_cleaner.py' to standardize and merge data.")
         else:
             print("✗ NOT READY - Missing required datasets")
             print("\nMissing:")

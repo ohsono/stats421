@@ -196,8 +196,8 @@ def print_manual_steps():
    - Review: Any download errors in console output
 
 4. NEXT STEPS
-   - Data cleaning and merging (next script)
-   - Feature engineering
+   - Data cleaning: python data_cleaner.py
+   - Feature engineering: python feature_engineer.py
    - Analysis and modeling
     """)
 
@@ -225,10 +225,13 @@ NEXT STEPS:
 2. Verify data quality:
    python -c "from pathlib import Path; print('Files:', len(list(Path('housing_market_data').rglob('*.csv'))))"
 
-3. Run data cleaning script (to be created):
-   python data_cleaning.py
+3. Run data cleaning script:
+   python data_cleaner.py
 
-4. Start analysis!
+4. Run feature engineering:
+   python feature_engineer.py
+
+5. Start analysis!
 
 USEFUL COMMANDS:
 

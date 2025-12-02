@@ -242,7 +242,7 @@ class HousingDataDownloader:
         To use the BLS API:
         1. Register for API key at: https://www.bls.gov/developers/home.htm
         2. Save your API key to: {self.bls_dir}/api_key.txt
-        3. Run the companion script: download_bls_api.py (to be created)
+        3. Run the companion script: bls_api_downloader.py
         """
         
         print(instructions)
@@ -433,7 +433,7 @@ class HousingDataDownloader:
            - Verify date ranges
            - Ensure metro codes align
         
-        3. Run data cleaning script (next step):
+        3. Run data cleaning script: data_cleaner.py
            - Will standardize formats
            - Merge datasets
            - Create analysis-ready dataset

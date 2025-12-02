@@ -7,7 +7,10 @@ PROJECT ROOT
 │   ├── housing_data_downloader.py    (17KB) - Main data downloader
 │   ├── bls_api_downloader.py         (13KB) - BLS API downloader
 │   ├── verify_data.py                (15KB) - Data quality checker
-│   ├── data_cleaner.py               (9KB)  - Data cleaning & merging
+│   ├── data_cleaner.py               (28KB) - Data cleaning & merging
+│   ├── feature_engineer.py           (3.5KB)- Feature engineering
+│   ├── ca_county_cleaner.py          (3KB)  - CA county analysis
+│   ├── tx_county_cleaner.py          (3KB)  - TX county analysis
 │   └── setup.py                      (10KB) - Setup wizard
 │
 ├── 🛠️  Utilities
