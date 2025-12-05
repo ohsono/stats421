@@ -1,18 +1,19 @@
-# Housing Market Data Analysis: CA to TX Migration & Investment Opportunities
+# Housing Market Data Analysis: California County Investment Opportunities
 
-Complete data pipeline for analyzing housing market trends, migration patterns, and identifying investment opportunities for 2026.
+Complete data pipeline for analyzing California county-level housing markets and identifying undervalued investment opportunities for 2026.
 
 > [!NOTE]
-> **Development Status:** Check [DEV_LOG.md](DEV_LOG.md) for the latest findings, debug logs, and current focus.
+> **Latest Analysis:** [CA County Investment Summary](CA_COUNTY_INVESTMENT_SUMMARY.md) | [Scoring Methodology](SCORING_METHODOLOGY.md)
 
 ## 📊 Project Overview
 
-This project provides tools to:
+This project provides a comprehensive data-driven analysis to:
 
-- Download housing market datasets from multiple authoritative sources
-- Analyze CA to TX migration patterns and ROI opportunities
-- Identify emerging hot housing markets for 2026 investment
-- Clean, merge, and prepare data for advanced analytics
+- **Identify undervalued California counties** with strong growth potential
+- Download housing market datasets from authoritative sources (Zillow, Census, BLS, FHFA)
+- Analyze county-level price trends, demographics, and investment metrics
+- Score and rank opportunities using transparent, reproducible methodology
+- Generate actionable investment recommendations with risk assessment
 
 ## 🎯 Key Features
 
@@ -123,6 +124,58 @@ This script:
    ```bash
    python bls_api_downloader.py
    ```
+
+### 6. Run California County Analysis
+
+```bash
+# Analyze all California counties
+python ca_county_analysis.py
+
+# Deep dive on top 5 counties
+python top5_deep_dive.py
+
+# View scoring methodology
+python scoring_methodology.py
+```
+
+## 🏔️ California County Analysis - Key Findings
+
+### Top 5 Investment Opportunities (2026)
+
+Based on comprehensive scoring methodology (Affordability 30%, Growth 40%, Demographics 20%, Yield 10%):
+
+| Rank | County | Score | Entry Price | YoY Growth | Key Strengths |
+|------|--------|-------|-------------|------------|---------------|
+| **1** | **Imperial** | **55.6** | **$365K** | **+6.83%** | **Highest appreciation, affordable** |
+| 2 | Madera | 54.6 | $418K | +1.35% | Population growth, Yosemite gateway |
+| 3 | Yuba | 51.8 | $413K | +0.82% | Sacramento spillover, 1.6% pop growth |
+| 4 | Kings | 49.9 | $355K | +2.04% | Military base, balanced returns |
+| 5 | Placer | 29.5 | $676K | +0.18% | Premium market, tech jobs |
+
+### Why Imperial County Wins
+
+**Mathematical Scoring Breakdown:**
+- **Affordability: 96.9/100** → 29.1 points (30% weight)
+- **Growth: 50.0/100** → 20.0 points (40% weight) ⭐
+- **Demographics: 0.0/100** → 0.0 points (20% weight)
+- **Yield: 65.2/100** → 6.5 points (10% weight)
+
+**Total: 55.6/100**
+
+**Key Factors:**
+1. **6.83% YoY appreciation** - HIGHEST in California (3.3X better than 2nd place)
+2. **5.79% 3-year CAGR** - Proven track record, not a fluke
+3. **$365K entry** - 2nd most affordable of top counties
+4. **6.0% rental yield** - Decent cash flow while appreciating
+
+**Investment Thesis:** Border economy + agriculture + emerging lithium extraction industry driving consistent growth.
+
+### Complete Analysis Documents
+
+- **[CA County Investment Summary](CA_COUNTY_INVESTMENT_SUMMARY.md)** - Full investment guide
+- **[Scoring Methodology](SCORING_METHODOLOGY.md)** - Transparent scoring formula
+- **[Top 5 Deep Dive](top5_deep_dive.py)** - Detailed comparison script
+- **[Data Column Mapping](data_column_mapping.py)** - Score to data lineage
 
 ## 📊 Data Sources
 

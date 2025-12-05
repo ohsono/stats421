@@ -115,3 +115,90 @@
 
 1. **Analysis:** Begin exploratory data analysis on the processed datasets.
 2. **Visualization:** Generate charts for migration vs. price appreciation.
+
+## Iteration: California County Investment Analysis
+
+**Date:** 2025-12-02
+
+### 📝 Changes
+
+- Pivoted analysis focus from national metros to California counties exclusively
+- Created `ca_county_analysis.py` for comprehensive county-level analysis
+- Created `top5_deep_dive.py` for detailed comparison of top 5 counties
+- Created `scoring_methodology.py` with transparent, reproducible scoring system
+- Created `data_column_mapping.py` showing exact data lineage
+- Generated comprehensive documentation:
+  - `CA_COUNTY_INVESTMENT_SUMMARY.md` - Investment guide
+  - `SCORING_METHODOLOGY.md` - Formula explanation
+  - `ca_top_counties.csv` - Quick reference data
+
+### 🔍 Key Findings
+
+**Top 5 California Counties for Investment (2026):**
+
+1. **Imperial County** (Score: 55.6/100)
+   - Entry: $365,425
+   - YoY Growth: +6.83% (HIGHEST)
+   - 3Y CAGR: +5.79%
+   - **Winner:** Highest appreciation + affordable entry
+
+2. **Madera County** (Score: 54.6/100)
+   - Entry: $417,882
+   - Pop Growth: +1.6% (HIGHEST)
+   - Yosemite gateway + Fresno spillover
+
+3. **Yuba County** (Score: 51.8/100)
+   - Entry: $412,777
+   - Pop Growth: +1.6%
+   - Sacramento spillover + Beale AFB
+
+4. **Kings County** (Score: 49.9/100)
+   - Entry: $355,330
+   - Military base (NAS Lemoore)
+   - Balanced returns
+
+5. **Placer County** (Score: 29.5/100)
+   - Entry: $675,913
+   - Premium market, tech jobs
+   - Lower returns but safer
+
+### 🎯 Scoring Methodology
+
+**Formula:**
+
+```
+Total Score = (Affordability × 30%) + (Growth × 40%) + (Demographics × 20%) + (Yield × 10%)
+```
+
+**Why Imperial County Wins:**
+
+- Dominates Growth metric (40% weight) with 6.83% YoY
+- Strong Affordability (30% weight) at $365K
+- Growth alone gives 20.0 points (36% of total score)
+- 3.3X better growth than 2nd place
+
+**Data Sources:**
+
+- 70% from `zhvi` column (Zillow Home Value Index)
+- 20% from `population` column (Census data)
+- 10% from estimated rental yields
+
+### 📊 Sensitivity Analysis
+
+Imperial County wins in scenarios where:
+
+- Growth weight ≥ 40% (standard for appreciation investors) ✅
+- Growth weight ≥ 25% AND yield weight < 40% ✅
+- Any balanced weighting ✅
+
+Alternative winners:
+
+- **Yuba County** wins if yield >50% or demographics >40% (niche scenarios)
+- **Cash flow focus** → Yuba (6.8% yield)
+- **Demographic play** → Yuba/Madera (1.6% pop growth)
+
+### 🎯 Next Focus (Iteration 5)
+
+1. **Visualizations:** Create charts/maps of county performance
+2. **Property Research:** Deep dive into Imperial County listings
+3. **Market Validation:** Cross-reference with local real estate data
